@@ -1,0 +1,103 @@
+:root{
+  --bg:#0b0c0f;
+  --card:#111318;
+  --muted:#9aa3af;
+  --text:#f2f4f8;
+  --accent:#3b82f6;
+  --accent-2:#06b6d4;
+  --ok:#22c55e;
+  --warn:#f59e0b;
+  --danger:#ef4444;
+  --border:#23262d;
+  --input:#0f1115;
+  --shadow:0 10px 30px rgba(0,0,0,.25)
+}
+:root.light{
+  --bg:#f6f7fb; --card:#ffffff; --muted:#6b7280; --text:#0b1220;
+  --accent:#2563eb; --accent-2:#0891b2; --ok:#16a34a; --warn:#d97706; --danger:#dc2626;
+  --border:#e5e7eb; --input:#f8fafc; --shadow:0 10px 24px rgba(2,6,23,.06)
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; background:var(--bg); color:var(--text); font:500 16px/1.5 system-ui,Segoe UI,Roboto,Inter,Helvetica,Arial,sans-serif;
+}
+h1,h2{margin:.2rem 0 1rem}
+h1{font-size:1.6rem}
+h2{font-size:1.1rem}
+.muted{color:var(--muted)}
+.bold{font-weight:700}
+.right{text-align:right}
+.center{text-align:center}
+.mt{margin-top:.8rem}
+
+.app-header{
+  position:sticky; top:0; z-index:10; backdrop-filter:saturate(1.2) blur(6px);
+  display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1rem 1.2rem; border-bottom:1px solid var(--border); background:color-mix(in oklab, var(--bg) 85%, transparent)
+}
+.brand{display:flex; gap:.8rem; align-items:center}
+.logo{width:44px;height:44px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent-2));border-radius:12px;box-shadow:var(--shadow)}
+.actions{display:flex; gap:.5rem; flex-wrap:wrap}
+.btn{
+  border:1px solid var(--border); background:var(--card); color:var(--text);
+  padding:.55rem .9rem; border-radius:.8rem; cursor:pointer; box-shadow:var(--shadow);
+}
+.btn:hover{transform:translateY(-1px)}
+.btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2)); border-color:transparent; color:white}
+.btn.ghost{background:transparent}
+.btn.danger{border-color:color-mix(in oklab,var(--danger),#000 20%); color:var(--danger)}
+
+.container{
+  max-width:1150px; margin:1.2rem auto; padding:0 1rem; display:grid; gap:1rem;
+}
+.card{
+  background:var(--card); border:1px solid var(--border); border-radius:18px; padding:1rem 1.1rem; box-shadow:var(--shadow)
+}
+
+.grid{display:grid; gap:.8rem}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g6{grid-template-columns:2fr repeat(5,1fr)}
+@media (max-width:920px){
+  .g6{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:1fr}
+  .g2{grid-template-columns:1fr}
+}
+
+label{display:grid; gap:.35rem; font-size:.9rem}
+input,select{
+  width:100%; background:var(--input); border:1px solid var(--border);
+  color:var(--text); padding:.6rem .7rem; border-radius:.6rem; outline:none;
+}
+input:focus,select:focus{border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in oklab,var(--accent),transparent 80%)}
+.inline-input{width:150px; margin-left:.6rem}
+
+.table-header{display:flex; justify-content:space-between; align-items:center}
+.search{max-width:280px}
+
+.table-wrap{overflow:auto; border:1px solid var(--border); border-radius:12px}
+table{width:100%; border-collapse:separate; border-spacing:0}
+thead th, tfoot td{position:sticky; top:0; background:var(--card); z-index:1}
+thead th{top:0}
+th,td{padding:.7rem .6rem; border-bottom:1px solid var(--border); text-align:left; font-size:.93rem}
+tbody tr:hover{background:color-mix(in oklab,var(--card),#000 7%)}
+tfoot td{font-weight:600}
+td.total{font-size:1.2rem}
+
+.kbd, kbd{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+  background:var(--input); border:1px solid var(--border); padding:.12rem .35rem; border-radius:.35rem; font-size:.85em;
+}
+
+.footer{max-width:1150px; margin:2rem auto; padding:0 1rem 2rem}
+
+.print-invoice{color:black}
+.print-table{width:100%; border-collapse:collapse}
+.print-table th,.print-table td{border:1px solid #555; padding:.4rem .5rem}
+.print-table th{background:#f0f0f0}
+
+@media print{
+  body{background:#fff}
+  .app-header, .container .card:not(:has(.print-only)), .footer{display:none}
+  .print-invoice{display:block !important; font:14px/1.4 "Times New Roman", serif}
+      }
