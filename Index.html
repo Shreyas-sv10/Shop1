@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Keerana / Kirana Billing</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">🛒</div>
+      <div>
+        <h1>Shree Keerana Store</h1>
+        <p class="muted">Fast billing • Smart totals • Beautiful prints</p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="toggleTheme" class="btn ghost" title="Toggle dark mode (Alt+D)">🌗</button>
+      <button id="newBillBtn" class="btn" title="New Bill (Alt+N)">New Bill</button>
+      <button id="saveBillBtn" class="btn" title="Save Bill (Alt+S)">Save</button>
+      <button id="printBtn" class="btn" title="Print Bill (Ctrl+P)">Print</button>
+      <button id="exportCsvBtn" class="btn" title="Export CSV (Alt+E)">Export CSV</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Customer</h2>
+      <div class="grid g2">
+        <label>
+          <span>Customer Name</span>
+          <input type="text" id="customerName" placeholder="e.g., Ramesh" />
+        </label>
+        <label>
+          <span>Phone</span>
+          <input type="tel" id="customerPhone" placeholder="e.g., 9XXXXXXXXX" />
+        </label>
+      </div>
+
+      <div class="grid g3 mt">
+        <label>
+          <span>Bill No.</span>
+          <input type="text" id="billNo" readonly />
+        </label>
+        <label>
+          <span>Date & Time</span>
+          <input type="text" id="billDate" readonly />
+        </label>
+        <label>
+          <span>Cashier</span>
+          <input type="text" id="cashier" value="Owner" />
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Add Item</h2>
+      <div class="grid g6">
+        <label class="g2">
+          <span>Item</span>
+          <input type="text" id="itemName" list="inventoryList" placeholder="Type to search…" autocomplete="off" />
+          <datalist id="inventoryList"></datalist>
+        </label>
+        <label>
+          <span>Qty</span>
+          <input type="number" id="itemQty" min="1" step="1" value="1" />
+        </label>
+        <label>
+          <span>Unit</span>
+          <select id="itemUnit">
+            <option value="pcs">pcs</option>
+            <option value="kg">kg</option>
+            <option value="g">g</option>
+            <option value="L">L</option>
+            <option value="ml">ml</option>
+          </select>
+        </label>
+        <label>
+          <span>Rate (₹)</span>
+          <input type="number" id="itemRate" min="0" step="0.01" />
+        </label>
+        <label>
+          <span>GST %</span>
+          <input type="number" id="itemGst" min="0" step="0.1" value="0" />
+        </label>
+        <label>
+          <span>Disc %</span>
+          <input type="number" id="itemDisc" min="0" step="0.1" value="0" />
+        </label>
+      </div>
+      <div class="mt">
+        <button id="addItemBtn" class="btn primary" title="Add Item (Enter)">Add Item</button>
+        <button id="quickItemBtn" class="btn ghost" title="Quick Add (Alt+Q)">Quick Item</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="table-header">
+        <h2>Items</h2>
+        <input id="searchRows" class="search" type="search" placeholder="Filter items…" />
+      </div>
+      <div class="table-wrap">
+        <table id="itemsTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Item</th>
+              <th>Qty</th>
+              <th>Unit</th>
+              <th>Rate (₹)</th>
+              <th>GST %</th>
+              <th>Disc %</th>
+              <th>Amount (₹)</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody><!-- rows injected --></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="7" class="right bold">Sub-Total</td>
+              <td class="right" id="subTotalCell">₹0.00</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td colspan="7" class="right bold">Total GST</td>
+              <td class="right" id="gstTotalCell">₹0.00</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td colspan="7" class="right bold">
+                Overall Discount
+                <span class="muted">(₹)</span>
+                <input id="overallDiscount" type="number" min="0" step="0.01" value="0" class="inline-input" />
+              </td>
+              <td class="right" id="overallDiscountDisplay">₹0.00</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td colspan="7" class="right bold">Grand Total</td>
+              <td class="right total" id="grandTotalCell">₹0.00</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <div class="grid g3 mt">
+        <label>
+          <span>Paid (₹)</span>
+          <input id="paidAmount" type="number" min="0" step="0.01" value="0" />
+        </label>
+        <label>
+          <span>Payment Mode</span>
+          <select id="paymentMode">
+            <option>Cash</option>
+            <option>UPI</option>
+            <option>Card</option>
+            <option>Wallet</option>
+          </select>
+        </label>
+        <label>
+          <span>Change Due (₹)</span>
+          <input id="changeDue" type="text" readonly />
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Saved Bills</h2>
+      <div class="grid g2">
+        <input id="savedSearch" class="search" type="search" placeholder="Search by name, phone or bill no…" />
+        <button id="clearSaved" class="btn danger ghost">Clear All Saved</button>
+      </div>
+      <div class="table-wrap small mt">
+        <table id="savedBillsTable">
+          <thead>
+            <tr>
+              <th>Bill No.</th>
+              <th>Customer</th>
+              <th>Phone</th>
+              <th>Date</th>
+              <th>Total (₹)</th>
+              <th>Mode</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody><!-- saved bills injected --></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer muted">
+    <p>
+      Shortcuts: <kbd>Alt+N</kbd> New • <kbd>Alt+S</kbd> Save • <kbd>Ctrl+P</kbd> Print •
+      <kbd>Alt+Q</kbd> Quick Item • <kbd>Alt+D</kbd> Dark • <kbd>/</kbd> Search rows
+    </p>
+  </footer>
+
+  <!-- Print template -->
+  <template id="printTemplate">
+    <div class="print-invoice">
+      <h1>Shree Keerana Store</h1>
+      <p class="muted">Thank you for shopping with us!</p>
+      <hr />
+      <div class="grid g3">
+        <div><strong>Bill No:</strong> <span data-bind="billNo"></span></div>
+        <div><strong>Date:</strong> <span data-bind="billDate"></span></div>
+        <div><strong>Cashier:</strong> <span data-bind="cashier"></span></div>
+        <div><strong>Name:</strong> <span data-bind="customerName"></span></div>
+        <div><strong>Phone:</strong> <span data-bind="customerPhone"></span></div>
+        <div><strong>Payment:</strong> <span data-bind="paymentMode"></span></div>
+      </div>
+      <table class="print-table">
+        <thead>
+          <tr>
+            <th>#</th><th>Item</th><th class="right">Qty</th><th>Unit</th>
+            <th class="right">Rate</th><th class="right">GST%</th>
+            <th class="right">Disc%</th><th class="right">Amount</th>
+          </tr>
+        </thead>
+        <tbody data-bind="rows"></tbody>
+        <tfoot>
+          <tr><td colspan="7" class="right">Sub-Total</td><td class="right" data-bind="subTotal"></td></tr>
+          <tr><td colspan="7" class="right">Total GST</td><td class="right" data-bind="gstTotal"></td></tr>
+          <tr><td colspan="7" class="right">Overall Discount</td><td class="right" data-bind="overallDiscount"></td></tr>
+          <tr><td colspan="7" class="right"><strong>Grand Total</strong></td><td class="right" data-bind="grandTotal"></td></tr>
+          <tr><td colspan="7" class="right">Paid</td><td class="right" data-bind="paidAmount"></td></tr>
+          <tr><td colspan="7" class="right">Change Due</td><td class="right" data-bind="changeDue"></td></tr>
+        </tfoot>
+      </table>
+      <p class="center muted">No returns without bill • Prices incl. taxes where applicable</p>
+    </div>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+      </html>
